@@ -8,7 +8,7 @@ memory.py  -> This file implements the replay buffers for various single agent d
 
 config.py -> This file contains all the tickers and technical indicators used for the stock market environment.
 
-models.py -> This file contains implementations of the network architectures used in the deep reinforcement learning algorithms (DDPG,TD3,PPO). 
+models.py -> This file contains implementation of the network architectures used in the deep reinforcement learning algorithms (DDPG,TD3,PPO). 
 
 environment.py -> This file contains the code for the stock trading market environment.
 
@@ -29,8 +29,7 @@ financial_data.db -> A SQL based database storing the news headline of selected 
 To encode the texts, we utilized the 768-dimensional embedding obtained per news item of each company by averaging the token-level outputs from 
 the final BERT layer. Our algorithm then used the CNN text embedding architecture to obtain a 1-dimensional text embedding. For each trading day,
 we compile the news-headline of the last 7 days for each company and feed into the CNN text-embedding architecture to obtain the news encoding. 
-We then encode the news encodings using LSTM and then combine it with the stocks' pricing datas as well as their technical indicators and turbulence value which then
-input into the actor-critic model for decision making.
+We then encode the news encodings using LSTM and then combine the news encoding with the stocks' pricing data as well as their technical indicators and turbulence value which then input into the actor-critic model for decision making.
 
 # Download the financial news and tensor embeddings
 <code> python setup.py </code>
