@@ -28,7 +28,7 @@ financial_data.db -> A SQL based database storing the news headline of selected 
 Execute the following command to install the dependencies:
 <code> pip install -r requirement.txt </code>
 
-# News-headlines Processing
+# News-headline Processing
 
 To encode the texts, we utilized the 768-dimensional embedding obtained per news item of each company by averaging the token-level outputs from 
 the final BERT layer. Our algorithm then used the CNN text embedding architecture to obtain a 1-dimensional text embedding. For each trading day,
