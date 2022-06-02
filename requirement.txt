@@ -11,3 +11,4 @@ stockstats
 scipy
 linalg
 transformers
+gdown
