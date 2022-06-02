@@ -24,6 +24,10 @@ net.py -> This file contains CNN based news embedding model and LSTM based Actor
 
 financial_data.db -> A SQL based database storing the news headline of selected stocks.
 
+# Installation Steps
+Execute the following command to install the dependencies:
+<code> pip install -r requirement.txt </code>
+
 # News-headlines Processing
 
 To encode the texts, we utilized the 768-dimensional embedding obtained per news item of each company by averaging the token-level outputs from 
