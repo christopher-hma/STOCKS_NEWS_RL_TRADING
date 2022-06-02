@@ -36,9 +36,10 @@ we compile the news-headline of the last 7 days for each company and feed into t
 We then encode the news encodings using LSTM and then combine the news encoding with the stocks' pricing data as well as their technical indicators and turbulence value which then input into the actor-critic model for decision making.
 
 # Download the financial news and tensor embeddings
-<code> python setup.py </code>
-The financial news are downloaded from [finhub]{https://finnhub.io/}. Subscriptions maybe required for more news. I included some
-of them in financial_data.db for my project.
+<code> python setup.py </code> <br />
+The financial news are downloaded from [finhub]{https://finnhub.io/}. <br />
+Subscriptions maybe required for more news. 
+I included some of them in financial_data.db for my project.
 
 # Training
 Execute the following command to train STOCKS_NEWS_RL:
