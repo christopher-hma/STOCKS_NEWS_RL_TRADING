@@ -1,0 +1,13 @@
+pytorch
+numpy
+pandas
+empyrical
+matplotlib
+yaml
+tqdm
+itertools
+yfinance
+stockstats
+scipy
+linalg
+transformers
