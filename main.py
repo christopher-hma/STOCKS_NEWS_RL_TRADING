@@ -258,6 +258,8 @@ if __name__ == "__main__":
 
    processed = feature.preprocess(df)
 
+   processed = feature.calculate_systemic_risk(processed)
+
    list_ticker = processed["tic"].unique().tolist()
 
    list_date = list(pd.date_range(processed['date'].min(),processed['date'].max()).astype(str))

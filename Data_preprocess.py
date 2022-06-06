@@ -130,6 +130,53 @@ class Feature_Engineering:
             smoothed_values.append(new_smooth_value)
         
         return(smoothed_values)
+
+    def gini(self, values):
+        
+        values = list(values)
+        values.sort()
+        
+        minimum_value = values[0]
+        lorenz_curve_value = minimum_value
+        average_input = sum(values)/len(values)
+        line_of_equality = [average_input]
+        gap_area = [line_of_equality[0] - lorenz_curve_value]
+        
+        for index in range(1, len(values)):
+            lorenz_curve_value += values[index]
+            line_of_equality.append(line_of_equality[index - 1] + average_input)
+            gap_area.append(line_of_equality[index - 1] + average_input
+                            - lorenz_curve_value)
+        
+        return(sum(gap_area)/sum(line_of_equality))
+    
+    def calculate_systemic_risk(self,df):
+        
+        dates = df.date.unique()        
+        df1 = df.copy()
+        df_pivot = df1.pivot(index="date", columns="tic", values="close")        
+        systemic_risk = [0] * 250       
+        start = 250
+        i = start
+        while i < len(dates):
+
+            cov_matrix = df_pivot.iloc[i - 250 : i + 1].cov()
+            eigenvalues = np.sort(np.linalg.eig(cov_matrix)[0])
+            systemic_risk.append(self.gini(values=eigenvalues))
+            i += 1
+
+
+        systemic_risk = pd.DataFrame(
+            {"date": df_pivot.index, "systemic_risk": systemic_risk}
+        )
+
+        df = df.merge(systemic_risk, on="date")
+
+        df = df.sort_values(["date", "tic"]).reset_index(drop=True)    
+
+        print(df)
+            
+        return df
     
     def add_technical_indicator(self, data):
         """
@@ -143,9 +190,11 @@ class Feature_Engineering:
         df = df.sort_values(by=['tic','date'])
         
         stock = Sdf.retype(df.copy())
-               
-        stock_names = stock.tic.unique()       
         
+        print(stock)
+        
+        stock_names = stock.tic.unique()
+                
         tech_indicator = self.technical_index
         
         for indicator in tech_indicator:
@@ -168,8 +217,8 @@ class Feature_Engineering:
                  except Exception as e:
                  
                      print(e)
-               
-        
+                
+             
              df = df.merge(df_indicator[['tic','date',indicator]],on=['tic','date'],how='left')
         
         df = df.sort_values(by=['date','tic'])
@@ -184,9 +233,12 @@ class Feature_Engineering:
     
         df_pivot = df1.pivot(index="date", columns="tic", values="close")
     
-        turbulence_index = [0] * start
+        turbulence_index = [0] * 250
 
-        while(i<len(dates)):
+        turbulence_sign = list()
+ 
+
+        for i in range(start,len(dates)):
 
         
              historical_price = df_pivot.iloc[i-start:i]
@@ -203,17 +255,45 @@ class Feature_Engineering:
         
              i += 1
 
+        for i in range(250):
 
-        turbulence_index = self.smooth(turbulence_index,12)
+            turbulence_sign.append(1)
+
+        for i in range(250,len(dates)):
+
+           
+            ratio = (turbulence_index[i] - turbulence_index[i - 15])/turbulence_index[i - 15]
+
+            if abs(ratio) >= 0.33:
+
+               print(dates[i],turbulence_index[i],turbulence_index[i - 15])
+
+               turbulence_sign.append(-1)
+
+            else:
+
+               turbulence_sign.append(1)
+
+       
+        turbulence_sign = pd.DataFrame(
+            {"date": df_pivot.index, "turbulence_sign": turbulence_sign}
+        )
+
+        df = df.merge(turbulence_sign, on="date")
+        
+        df = df.sort_values(["date", "tic"]).reset_index(drop=True)    
+
+        #turbulence_index = self.smooth(turbulence_index,12)        
 
         turbulence_index = pd.DataFrame(
             {"date": df_pivot.index, "turbulence": turbulence_index}
         )
 
+   
         df = df.merge(turbulence_index, on="date")
         
         df = df.sort_values(["date", "tic"]).reset_index(drop=True)
-           
+
         return df
 
 class StockNewsExtract:
